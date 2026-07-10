@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import UnitPage from '@/components/UnitPage';
 import { getPhotos, getBlockedDates } from '@/lib/storage';
 

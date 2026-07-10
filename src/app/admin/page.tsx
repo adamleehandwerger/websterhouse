@@ -195,21 +195,37 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
     fetchBlocked();
   }, []);
 
-  // ── Photo upload ──
+  // ── Photo upload (direct to Cloudinary to bypass Vercel's 4.5 MB body limit) ──
   const uploadPhotos = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files?.length) return;
-    const form = new FormData();
-    form.append('unit', photoUnit);
-    Array.from(files).forEach(f => form.append('files', f));
-    const r = await fetch('/api/admin/photos', { method: 'POST', body: form });
-    if (r.ok) {
-      showToast('Photos uploaded!');
-      fetchPhotos(photoUnit);
-    } else {
-      const body = await r.json().catch(() => ({}));
-      showToast(`Upload failed: ${body.error ?? r.status}`);
+
+    const sigRes = await fetch(`/api/admin/upload-signature?unit=${photoUnit}`);
+    if (!sigRes.ok) { showToast('Upload failed: could not get signature'); return; }
+    const { signature, timestamp, api_key, cloud_name, folder } = await sigRes.json();
+
+    for (const file of Array.from(files)) {
+      const form = new FormData();
+      form.append('file', file);
+      form.append('api_key', api_key);
+      form.append('signature', signature);
+      form.append('timestamp', String(timestamp));
+      form.append('folder', folder);
+
+      const up = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,
+        { method: 'POST', body: form }
+      );
+      if (!up.ok) {
+        const err = await up.json().catch(() => ({}));
+        showToast(`Upload failed: ${err.error?.message ?? up.status}`);
+        if (photoInputRef.current) photoInputRef.current.value = '';
+        return;
+      }
     }
+
+    showToast('Photos uploaded!');
+    fetchPhotos(photoUnit);
     if (photoInputRef.current) photoInputRef.current.value = '';
   };
 
@@ -222,14 +238,38 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
     if (r.ok) { showToast('Photo deleted.'); fetchPhotos(unit); }
   };
 
-  // ── Review upload ──
+  // ── Review upload (direct to Cloudinary) ──
   const uploadReviews = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files?.length) return;
-    const form = new FormData();
-    Array.from(files).forEach(f => form.append('files', f));
-    const r = await fetch('/api/admin/reviews', { method: 'POST', body: form });
-    if (r.ok) { showToast('Review uploaded!'); fetchReviews(); }
+
+    const sigRes = await fetch('/api/admin/upload-signature?unit=reviews');
+    if (!sigRes.ok) { showToast('Upload failed: could not get signature'); return; }
+    const { signature, timestamp, api_key, cloud_name, folder } = await sigRes.json();
+
+    for (const file of Array.from(files)) {
+      if (!file.name.toLowerCase().endsWith('.png')) continue;
+      const form = new FormData();
+      form.append('file', file);
+      form.append('api_key', api_key);
+      form.append('signature', signature);
+      form.append('timestamp', String(timestamp));
+      form.append('folder', folder);
+
+      const up = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`,
+        { method: 'POST', body: form }
+      );
+      if (!up.ok) {
+        const err = await up.json().catch(() => ({}));
+        showToast(`Upload failed: ${err.error?.message ?? up.status}`);
+        if (reviewInputRef.current) reviewInputRef.current.value = '';
+        return;
+      }
+    }
+
+    showToast('Review uploaded!');
+    fetchReviews();
     if (reviewInputRef.current) reviewInputRef.current.value = '';
   };
 

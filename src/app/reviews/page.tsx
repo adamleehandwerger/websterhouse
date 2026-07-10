@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { getReviews } from '@/lib/storage';
 
 export default async function Reviews() {
