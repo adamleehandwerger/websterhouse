@@ -12,7 +12,7 @@ export default async function UpperUnit() {
     <UnitPage
       unit="upper"
       title="Upper Unit"
-      description="Bright and spacious with an open floor plan, fully equipped kitchen, and comfortable furnishings throughout. Sleeps up to 4 guests."
+      description="Bright and spacious with an open floor plan, fully equipped kitchen, and comfortable furnishings throughout. Sleeps up to 3 guests."
       photos={photoObjs.map(p => p.url)}
       blockedDates={blocked.upper}
     />

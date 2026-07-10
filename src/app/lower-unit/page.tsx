@@ -12,7 +12,7 @@ export default async function LowerUnit() {
     <UnitPage
       unit="lower"
       title="Lower Unit"
-      description="A cozy, private retreat with its own entrance. Ideal for couples or solo travelers looking for a quiet and comfortable stay."
+      description="A cozy, private retreat with its own entrance. Ideal for families or groups looking for a quiet and comfortable stay. Sleeps up to 4 guests."
       photos={photoObjs.map(p => p.url)}
       blockedDates={blocked.lower}
     />
