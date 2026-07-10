@@ -1,16 +1,30 @@
 import Link from 'next/link';
+import { promises as fs } from 'fs';
+import path from 'path';
 
-export default function Home() {
+async function getFirstPhoto(unit: string): Promise<string | null> {
+  try {
+    const dir = path.join(process.cwd(), 'public', 'uploads', unit);
+    const files = await fs.readdir(dir);
+    const image = files.find(f => /\.(jpe?g|png|webp|gif)$/i.test(f));
+    return image ? `/uploads/${unit}/${image}` : null;
+  } catch { return null; }
+}
+
+export default async function Home() {
+  const [upperPhoto, lowerPhoto] = await Promise.all([
+    getFirstPhoto('upper'),
+    getFirstPhoto('lower'),
+  ]);
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-12">
       {/* Hero */}
       <section className="relative text-center py-20 rounded-2xl mb-14 px-8 overflow-hidden min-h-[420px] flex items-center justify-center">
-        {/* House photo background */}
         <div
           className="absolute inset-0 bg-center bg-no-repeat"
           style={{ backgroundImage: "url('/images/house.jpg')", backgroundSize: '60%' }}
         />
-        {/* Dark overlay so text stays readable */}
         <div className="absolute inset-0 bg-black/50" />
 
         <div className="relative z-10">
@@ -39,9 +53,16 @@ export default function Home() {
 
       {/* Unit cards */}
       <section className="grid md:grid-cols-2 gap-8 mb-14">
+        {/* Upper Unit */}
         <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden group hover:shadow-md transition-shadow">
           <div className="h-48 bg-stone-200 overflow-hidden">
-            <img src="/images/house.jpg" alt="Webster House exterior" className="w-full h-full object-cover object-top" />
+            {upperPhoto ? (
+              <img src={upperPhoto} alt="Upper unit" className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-amber-100 to-stone-200 flex items-center justify-center">
+                <span className="text-stone-400 text-sm">Upload photos in Admin</span>
+              </div>
+            )}
           </div>
           <div className="p-6">
             <h2 className="text-xl font-bold text-stone-800 mb-2">Upper Unit</h2>
@@ -57,9 +78,16 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Lower Unit */}
         <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden group hover:shadow-md transition-shadow">
-          <div className="h-48 bg-gradient-to-br from-stone-200 to-stone-300 flex items-center justify-center">
-            <span className="text-stone-400 font-medium">Lower Unit</span>
+          <div className="h-48 bg-stone-200 overflow-hidden">
+            {lowerPhoto ? (
+              <img src={lowerPhoto} alt="Lower unit" className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-stone-200 to-stone-300 flex items-center justify-center">
+                <span className="text-stone-400 text-sm">Upload photos in Admin</span>
+              </div>
+            )}
           </div>
           <div className="p-6">
             <h2 className="text-xl font-bold text-stone-800 mb-2">Lower Unit</h2>
