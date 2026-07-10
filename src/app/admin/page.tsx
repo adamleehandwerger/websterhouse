@@ -188,6 +188,8 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
   const [photoUnit, setPhotoUnit] = useState<'upper' | 'lower'>('upper');
   const [calUnit, setCalUnit] = useState<'upper' | 'lower'>('upper');
   const [toast, setToast] = useState('');
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
+  const [dropIdx, setDropIdx] = useState<number | null>(null);
 
   const photoInputRef = useRef<HTMLInputElement>(null);
   const reviewInputRef = useRef<HTMLInputElement>(null);
@@ -312,6 +314,23 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
     if (r.ok) { showToast('Review deleted.'); fetchReviews(); }
   };
 
+  // ── Drag-and-drop reorder ──
+  const handleDrop = async (targetIdx: number) => {
+    if (dragIdx === null || dragIdx === targetIdx) { setDragIdx(null); setDropIdx(null); return; }
+    const photos = [...(photoUnit === 'upper' ? upperPhotos : lowerPhotos)];
+    const [moved] = photos.splice(dragIdx, 1);
+    photos.splice(targetIdx, 0, moved);
+    if (photoUnit === 'upper') setUpperPhotos(photos);
+    else setLowerPhotos(photos);
+    setDragIdx(null);
+    setDropIdx(null);
+    await fetch('/api/admin/photo-order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ unit: photoUnit, order: photos.map(p => p.publicId) }),
+    });
+  };
+
   // ── Calendar toggle ──
   const toggleDate = async (date: string) => {
     const current = blocked[calUnit];
@@ -408,10 +427,24 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
               No photos yet. Click &quot;Upload Photos&quot; to add some.
             </p>
           ) : (
+            <>
+            <p className="text-xs text-stone-400 mb-2">Drag photos to reorder.</p>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {activePhotos.map(photo => (
-                <div key={photo.publicId} className="relative group aspect-video rounded-xl overflow-hidden border border-stone-200">
-                  <img src={photo.url} alt="" className="w-full h-full object-cover" />
+              {activePhotos.map((photo, i) => (
+                <div
+                  key={photo.publicId}
+                  draggable
+                  onDragStart={() => { setDragIdx(i); setDropIdx(null); }}
+                  onDragOver={e => { e.preventDefault(); setDropIdx(i); }}
+                  onDragLeave={() => setDropIdx(null)}
+                  onDrop={() => handleDrop(i)}
+                  onDragEnd={() => { setDragIdx(null); setDropIdx(null); }}
+                  className={`relative group aspect-video rounded-xl overflow-hidden border transition-all cursor-grab active:cursor-grabbing
+                    ${dragIdx === i ? 'opacity-40 scale-95' : ''}
+                    ${dropIdx === i && dragIdx !== i ? 'border-amber-400 border-2 scale-105' : 'border-stone-200'}
+                  `}
+                >
+                  <img src={photo.url} alt="" className="w-full h-full object-cover pointer-events-none" />
                   <button
                     onClick={() => deletePhoto(photo.publicId, photoUnit)}
                     className="absolute top-1.5 right-1.5 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow"
@@ -422,6 +455,7 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
                 </div>
               ))}
             </div>
+            </>
           )}
         </div>
       )}

@@ -36,17 +36,50 @@ export async function uploadReview(file: File): Promise<string> {
 
 export async function getPhotos(unit: string): Promise<{ url: string; publicId: string }[]> {
   try {
-    const result = await cloudinary.api.resources({
-      type: 'upload',
-      prefix: folderFor(unit),
-      max_results: 100,
-      resource_type: 'image',
-    });
-    return result.resources.map((r: { secure_url: string; public_id: string }) => ({
+    const [result, order] = await Promise.all([
+      cloudinary.api.resources({
+        type: 'upload',
+        prefix: folderFor(unit),
+        max_results: 100,
+        resource_type: 'image',
+      }),
+      getPhotoOrder(unit),
+    ]);
+    const photos = result.resources.map((r: { secure_url: string; public_id: string }) => ({
       url: r.secure_url,
       publicId: r.public_id,
     }));
+    if (!order.length) return photos;
+    const ordered = order
+      .map((id: string) => photos.find((p: { url: string; publicId: string }) => p.publicId === id))
+      .filter(Boolean) as { url: string; publicId: string }[];
+    const remaining = photos.filter((p: { url: string; publicId: string }) => !order.includes(p.publicId));
+    return [...ordered, ...remaining];
   } catch { return []; }
+}
+
+async function getPhotoOrder(unit: string): Promise<string[]> {
+  try {
+    const result = await cloudinary.api.resources({
+      type: 'upload',
+      prefix: `websterhouse/data/order_${unit}`,
+      resource_type: 'raw',
+      max_results: 1,
+    });
+    if (!result.resources.length) return [];
+    const res = await fetch(result.resources[0].secure_url, { cache: 'no-store' });
+    return await res.json();
+  } catch { return []; }
+}
+
+export async function savePhotoOrder(unit: string, publicIds: string[]): Promise<void> {
+  const dataUri = `data:application/json;base64,${Buffer.from(JSON.stringify(publicIds)).toString('base64')}`;
+  await cloudinary.uploader.upload(dataUri, {
+    public_id: `websterhouse/data/order_${unit}`,
+    resource_type: 'raw',
+    overwrite: true,
+    invalidate: true,
+  });
 }
 
 export async function getFirstPhoto(unit: string): Promise<string | null> {
