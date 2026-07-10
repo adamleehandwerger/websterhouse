@@ -146,6 +146,34 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
 }
 
 /* ────────────────────────────────────────────────────────────
+   Image compression helper — resizes to max 1920px, JPEG 85%
+──────────────────────────────────────────────────────────── */
+function compressImage(file: File, maxWidth = 1920, quality = 0.85): Promise<File> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const scale = Math.min(1, maxWidth / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d')!.drawImage(img, 0, 0, canvas.width, canvas.height);
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) { resolve(file); return; }
+          resolve(new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }));
+        },
+        'image/jpeg',
+        quality
+      );
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(file); };
+    img.src = url;
+  });
+}
+
+/* ────────────────────────────────────────────────────────────
    Main admin panel
 ──────────────────────────────────────────────────────────── */
 type Tab = 'photos' | 'calendar' | 'reviews';
@@ -205,8 +233,9 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
     const { signature, timestamp, api_key, cloud_name, folder } = await sigRes.json();
 
     for (const file of Array.from(files)) {
+      const compressed = await compressImage(file);
       const form = new FormData();
-      form.append('file', file);
+      form.append('file', compressed);
       form.append('api_key', api_key);
       form.append('signature', signature);
       form.append('timestamp', String(timestamp));
@@ -249,8 +278,9 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
 
     for (const file of Array.from(files)) {
       if (!file.name.toLowerCase().endsWith('.png')) continue;
+      const compressed = await compressImage(file);
       const form = new FormData();
-      form.append('file', file);
+      form.append('file', compressed);
       form.append('api_key', api_key);
       form.append('signature', signature);
       form.append('timestamp', String(timestamp));
