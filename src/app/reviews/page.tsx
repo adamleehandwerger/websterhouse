@@ -1,15 +1,4 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-
-async function getReviews(): Promise<string[]> {
-  try {
-    const dir = path.join(process.cwd(), 'public', 'uploads', 'reviews');
-    const files = await fs.readdir(dir);
-    return files
-      .filter(f => /\.png$/i.test(f))
-      .map(f => `/uploads/reviews/${f}`);
-  } catch { return []; }
-}
+import { getReviews } from '@/lib/storage';
 
 export default async function Reviews() {
   const reviews = await getReviews();
@@ -27,10 +16,7 @@ export default async function Reviews() {
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {reviews.map(url => (
-            <div
-              key={url}
-              className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden"
-            >
+            <div key={url} className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
               <img src={url} alt="Guest review" className="w-full object-contain" />
             </div>
           ))}

@@ -1,26 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
-
-const dataFile = path.join(process.cwd(), 'data', 'blocked_dates.json');
-
-interface BlockedDates { upper: string[]; lower: string[] }
-
-async function read(): Promise<BlockedDates> {
-  try {
-    return JSON.parse(await fs.readFile(dataFile, 'utf-8'));
-  } catch {
-    return { upper: [], lower: [] };
-  }
-}
-
-async function write(data: BlockedDates) {
-  await fs.mkdir(path.dirname(dataFile), { recursive: true });
-  await fs.writeFile(dataFile, JSON.stringify(data, null, 2));
-}
+import { getBlockedDates, saveBlockedDates } from '@/lib/storage';
 
 export async function GET() {
-  return NextResponse.json(await read());
+  return NextResponse.json(await getBlockedDates());
 }
 
 export async function POST(req: NextRequest) {
@@ -30,18 +12,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid unit' }, { status: 400 });
   }
 
-  const data = await read();
+  const data = await getBlockedDates();
   const list: string[] = data[unit as 'upper' | 'lower'] ?? [];
 
   if (action === 'add' && !list.includes(date)) {
     list.push(date);
   } else if (action === 'remove') {
-    data[unit as 'upper' | 'lower'] = list.filter(d => d !== date);
-    await write(data);
+    data[unit as 'upper' | 'lower'] = list.filter((d: string) => d !== date);
+    await saveBlockedDates(data);
     return NextResponse.json({ ok: true });
   }
 
   data[unit as 'upper' | 'lower'] = list;
-  await write(data);
+  await saveBlockedDates(data);
   return NextResponse.json({ ok: true });
 }

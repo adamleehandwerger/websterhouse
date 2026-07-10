@@ -1,15 +1,5 @@
 import Link from 'next/link';
-import { promises as fs } from 'fs';
-import path from 'path';
-
-async function getFirstPhoto(unit: string): Promise<string | null> {
-  try {
-    const dir = path.join(process.cwd(), 'public', 'uploads', unit);
-    const files = await fs.readdir(dir);
-    const image = files.find(f => /\.(jpe?g|png|webp|gif)$/i.test(f));
-    return image ? `/uploads/${unit}/${image}` : null;
-  } catch { return null; }
-}
+import { getFirstPhoto } from '@/lib/storage';
 
 export default async function Home() {
   const [upperPhoto, lowerPhoto] = await Promise.all([
@@ -35,16 +25,10 @@ export default async function Home() {
             Two beautifully furnished units available for short-term stays. Comfortable, private, and ready for your visit.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/upper-unit"
-              className="px-8 py-3 bg-amber-500 hover:bg-amber-400 text-white rounded-xl font-semibold transition-colors shadow-lg"
-            >
+            <Link href="/upper-unit" className="px-8 py-3 bg-amber-500 hover:bg-amber-400 text-white rounded-xl font-semibold transition-colors shadow-lg">
               Upper Unit
             </Link>
-            <Link
-              href="/lower-unit"
-              className="px-8 py-3 bg-white/20 hover:bg-white/30 text-white border border-white/40 rounded-xl font-semibold transition-colors backdrop-blur-sm"
-            >
+            <Link href="/lower-unit" className="px-8 py-3 bg-white/20 hover:bg-white/30 text-white border border-white/40 rounded-xl font-semibold transition-colors backdrop-blur-sm">
               Lower Unit
             </Link>
           </div>
@@ -53,8 +37,7 @@ export default async function Home() {
 
       {/* Unit cards */}
       <section className="grid md:grid-cols-2 gap-8 mb-14">
-        {/* Upper Unit */}
-        <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden group hover:shadow-md transition-shadow">
+        <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden hover:shadow-md transition-shadow">
           <div className="h-48 bg-stone-200 overflow-hidden">
             {upperPhoto ? (
               <img src={upperPhoto} alt="Upper unit" className="w-full h-full object-cover" />
@@ -78,8 +61,7 @@ export default async function Home() {
           </div>
         </div>
 
-        {/* Lower Unit */}
-        <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden group hover:shadow-md transition-shadow">
+        <div className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden hover:shadow-md transition-shadow">
           <div className="h-48 bg-stone-200 overflow-hidden">
             {lowerPhoto ? (
               <img src={lowerPhoto} alt="Lower unit" className="w-full h-full object-cover" />
@@ -108,10 +90,7 @@ export default async function Home() {
       <section className="text-center py-10 bg-amber-50 rounded-2xl border border-amber-100">
         <h2 className="text-2xl font-bold text-stone-800 mb-2">What Our Guests Say</h2>
         <p className="text-stone-500 text-sm mb-5">Real reviews from real guests who have stayed with us.</p>
-        <Link
-          href="/reviews"
-          className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-700 font-semibold"
-        >
+        <Link href="/reviews" className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-700 font-semibold">
           Read all reviews
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

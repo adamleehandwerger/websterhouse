@@ -207,11 +207,10 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
   };
 
   const deletePhoto = async (url: string, unit: 'upper' | 'lower') => {
-    const filename = url.split('/').pop()!;
     const r = await fetch('/api/admin/photos', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ unit, filename }),
+      body: JSON.stringify({ url }),
     });
     if (r.ok) { showToast('Photo deleted.'); fetchPhotos(unit); }
   };
@@ -228,11 +227,10 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
   };
 
   const deleteReview = async (url: string) => {
-    const filename = url.split('/').pop()!;
     const r = await fetch('/api/admin/reviews', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ filename }),
+      body: JSON.stringify({ url }),
     });
     if (r.ok) { showToast('Review deleted.'); fetchReviews(); }
   };

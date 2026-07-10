@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
+import { getPhotos } from '@/lib/storage';
 
 export async function GET(
   _req: NextRequest,
@@ -12,14 +11,6 @@ export async function GET(
     return NextResponse.json({ error: 'Invalid unit' }, { status: 400 });
   }
 
-  try {
-    const dir = path.join(process.cwd(), 'public', 'uploads', unit);
-    const files = await fs.readdir(dir);
-    const photos = files
-      .filter(f => /\.(jpe?g|png|webp|gif)$/i.test(f))
-      .map(f => `/uploads/${unit}/${f}`);
-    return NextResponse.json({ photos });
-  } catch {
-    return NextResponse.json({ photos: [] });
-  }
+  const photos = await getPhotos(unit);
+  return NextResponse.json({ photos });
 }
