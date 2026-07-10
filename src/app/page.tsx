@@ -7,8 +7,8 @@ export default function Home() {
       <section className="relative text-center py-20 rounded-2xl mb-14 px-8 overflow-hidden min-h-[420px] flex items-center justify-center">
         {/* House photo background */}
         <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url('/images/house.jpg')" }}
+          className="absolute inset-0 bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/images/house.jpg')", backgroundSize: '60%' }}
         />
         {/* Dark overlay so text stays readable */}
         <div className="absolute inset-0 bg-black/50" />
