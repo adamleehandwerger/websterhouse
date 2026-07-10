@@ -7,13 +7,16 @@ interface UnitPageProps {
   unit: 'upper' | 'lower';
   title: string;
   description: string;
+  basePrice: number;
+  extraPerPerson: number;
+  maxGuests: number;
   photos: string[];
   blockedDates: string[];
 }
 
 type Step = 'browsing' | 'done';
 
-export default function UnitPage({ unit, title, description, photos, blockedDates }: UnitPageProps) {
+export default function UnitPage({ unit, title, description, basePrice, extraPerPerson, maxGuests, photos, blockedDates }: UnitPageProps) {
   const [startDate, setStartDate] = useState<string | null>(null);
   const [endDate, setEndDate] = useState<string | null>(null);
   const [startInput, setStartInput] = useState('');
@@ -93,9 +96,26 @@ export default function UnitPage({ unit, title, description, photos, blockedDate
   return (
     <div className="max-w-5xl mx-auto px-4 py-10">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-stone-800 mb-2">{title}</h1>
-        <p className="text-stone-500 max-w-2xl">{description}</p>
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+        <div>
+          <h1 className="text-3xl font-bold text-stone-800 mb-2">{title}</h1>
+          <p className="text-stone-500 max-w-2xl">{description}</p>
+        </div>
+
+        {/* Pricing card */}
+        <div className="shrink-0 bg-amber-50 border border-amber-200 rounded-2xl px-6 py-4 min-w-[200px]">
+          <p className="text-xs font-semibold uppercase tracking-wide text-amber-700 mb-2">Pricing</p>
+          <p className="text-2xl font-bold text-stone-800">
+            ${basePrice.toLocaleString()}<span className="text-sm font-normal text-stone-500">/mo</span>
+          </p>
+          <p className="text-sm text-stone-500 mt-1">1 person</p>
+          <div className="border-t border-amber-200 mt-3 pt-3">
+            <p className="text-sm text-stone-600">
+              +${extraPerPerson}/mo per additional guest
+            </p>
+            <p className="text-xs text-stone-400 mt-0.5">Up to {maxGuests} guests total</p>
+          </div>
+        </div>
       </div>
 
       {/* Photos */}

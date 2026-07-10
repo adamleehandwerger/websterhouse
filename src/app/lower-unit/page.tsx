@@ -13,6 +13,9 @@ export default async function LowerUnit() {
       unit="lower"
       title="Lower Unit"
       description="A cozy, private retreat with its own entrance. Ideal for families or groups looking for a quiet and comfortable stay. Sleeps up to 4 guests."
+      basePrice={2650}
+      extraPerPerson={150}
+      maxGuests={4}
       photos={photoObjs.map(p => p.url)}
       blockedDates={blocked.lower}
     />

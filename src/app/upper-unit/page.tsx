@@ -13,6 +13,9 @@ export default async function UpperUnit() {
       unit="upper"
       title="Upper Unit"
       description="Bright and spacious with an open floor plan, fully equipped kitchen, and comfortable furnishings throughout. Sleeps up to 3 guests."
+      basePrice={2600}
+      extraPerPerson={100}
+      maxGuests={3}
       photos={photoObjs.map(p => p.url)}
       blockedDates={blocked.upper}
     />
