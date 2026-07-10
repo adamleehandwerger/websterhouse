@@ -2,17 +2,22 @@ import { list, put, del } from '@vercel/blob';
 
 export async function getPhotos(unit: string): Promise<string[]> {
   const { blobs } = await list({ prefix: `uploads/${unit}/` });
-  return blobs.map(b => b.url);
+  return blobs
+    .filter(b => b.pathname.startsWith(`uploads/${unit}/`))
+    .map(b => b.url);
 }
 
 export async function getFirstPhoto(unit: string): Promise<string | null> {
   const { blobs } = await list({ prefix: `uploads/${unit}/` });
-  return blobs[0]?.url ?? null;
+  const match = blobs.find(b => b.pathname.startsWith(`uploads/${unit}/`));
+  return match?.url ?? null;
 }
 
 export async function getReviews(): Promise<string[]> {
   const { blobs } = await list({ prefix: 'uploads/reviews/' });
-  return blobs.map(b => b.url);
+  return blobs
+    .filter(b => b.pathname.startsWith('uploads/reviews/'))
+    .map(b => b.url);
 }
 
 export async function getBlockedDates(): Promise<{ upper: string[]; lower: string[] }> {

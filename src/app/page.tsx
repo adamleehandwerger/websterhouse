@@ -24,7 +24,7 @@ export default async function Home() {
             Welcome to Webster House
           </h1>
           <p className="text-lg text-stone-200 max-w-xl mx-auto mb-10 drop-shadow">
-            Two beautifully furnished units available for short-term stays. Comfortable, private, and ready for your visit.
+            Mid-Term Rental &mdash; one month up to a year. Quiet and comfortable with AC, laundry, and high-speed internet.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/upper-unit" className="px-8 py-3 bg-amber-500 hover:bg-amber-400 text-white rounded-xl font-semibold transition-colors shadow-lg">
@@ -52,7 +52,7 @@ export default async function Home() {
           <div className="p-6">
             <h2 className="text-xl font-bold text-stone-800 mb-2">Upper Unit</h2>
             <p className="text-stone-500 text-sm mb-5 leading-relaxed">
-              Mid-Term Rental. One month up to a year. Quiet, comfortable with AC, laundry and high-speed internet.
+              Click to view photos, availability, and request information.
             </p>
             <Link href="/upper-unit" className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-700 font-semibold text-sm">
               View details &amp; availability
@@ -76,7 +76,7 @@ export default async function Home() {
           <div className="p-6">
             <h2 className="text-xl font-bold text-stone-800 mb-2">Lower Unit</h2>
             <p className="text-stone-500 text-sm mb-5 leading-relaxed">
-              Mid-Term Rental. One month up to a year. Quiet, comfortable with AC, laundry and high-speed internet.
+              Click to view photos, availability, and request information.
             </p>
             <Link href="/lower-unit" className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-700 font-semibold text-sm">
               View details &amp; availability
