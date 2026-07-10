@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { getFirstPhoto } from '@/lib/storage';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const [upperPhoto, lowerPhoto] = await Promise.all([
     getFirstPhoto('upper'),
@@ -50,7 +52,7 @@ export default async function Home() {
           <div className="p-6">
             <h2 className="text-xl font-bold text-stone-800 mb-2">Upper Unit</h2>
             <p className="text-stone-500 text-sm mb-5 leading-relaxed">
-              Bright, spacious, and filled with natural light. Modern kitchen, comfortable bedroom, and a welcoming living area.
+              Mid-Term Rental. One month up to a year. Quiet, comfortable with AC, laundry and high-speed internet.
             </p>
             <Link href="/upper-unit" className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-700 font-semibold text-sm">
               View details &amp; availability
@@ -74,7 +76,7 @@ export default async function Home() {
           <div className="p-6">
             <h2 className="text-xl font-bold text-stone-800 mb-2">Lower Unit</h2>
             <p className="text-stone-500 text-sm mb-5 leading-relaxed">
-              Cozy and private with its own entrance. A perfect retreat for couples or solo travelers seeking a quiet stay.
+              Mid-Term Rental. One month up to a year. Quiet, comfortable with AC, laundry and high-speed internet.
             </p>
             <Link href="/lower-unit" className="inline-flex items-center gap-1 text-amber-600 hover:text-amber-700 font-semibold text-sm">
               View details &amp; availability
