@@ -14,16 +14,34 @@ function toISO(y: number, m: number, d: number) {
   return `${y}-${String(m + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
 }
 
+function datesInRange(a: string, b: string): string[] {
+  const start = new Date(a < b ? a : b);
+  const end   = new Date(a < b ? b : a);
+  const out: string[] = [];
+  const cur = new Date(start);
+  while (cur <= end) {
+    out.push(cur.toISOString().split('T')[0]);
+    cur.setDate(cur.getDate() + 1);
+  }
+  return out;
+}
+
 function AdminCalendar({
   blockedDates,
   onToggle,
+  onBlockRange,
+  onUnblockRange,
 }: {
   blockedDates: string[];
   onToggle: (date: string) => void;
+  onBlockRange: (dates: string[]) => void;
+  onUnblockRange: (dates: string[]) => void;
 }) {
   const today = new Date();
   const [viewYear, setViewYear] = useState(today.getFullYear());
   const [viewMonth, setViewMonth] = useState(today.getMonth());
+  const [rangeStart, setRangeStart] = useState<string | null>(null);
+  const [hoverDate, setHoverDate] = useState<string | null>(null);
 
   const prevMonth = () => {
     if (viewMonth === 0) { setViewYear(y => y - 1); setViewMonth(11); }
@@ -32,6 +50,29 @@ function AdminCalendar({
   const nextMonth = () => {
     if (viewMonth === 11) { setViewYear(y => y + 1); setViewMonth(0); }
     else setViewMonth(m => m + 1);
+  };
+
+  const previewDates = rangeStart && hoverDate ? new Set(datesInRange(rangeStart, hoverDate)) : null;
+
+  const handleClick = (iso: string) => {
+    if (!rangeStart) {
+      setRangeStart(iso);
+      return;
+    }
+    if (rangeStart === iso) {
+      setRangeStart(null);
+      return;
+    }
+    const range = datesInRange(rangeStart, iso);
+    // If majority of range is already blocked, unblock it; otherwise block it
+    const blockedCount = range.filter(d => blockedDates.includes(d)).length;
+    if (blockedCount > range.length / 2) {
+      onUnblockRange(range);
+    } else {
+      onBlockRange(range);
+    }
+    setRangeStart(null);
+    setHoverDate(null);
   };
 
   const firstDay = new Date(viewYear, viewMonth, 1).getDay();
@@ -57,6 +98,13 @@ function AdminCalendar({
         </button>
       </div>
 
+      {rangeStart && (
+        <div className="mb-2 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-700 flex items-center justify-between">
+          <span>Start: <strong>{rangeStart}</strong> — now click an end date</span>
+          <button onClick={() => { setRangeStart(null); setHoverDate(null); }} className="ml-2 text-amber-500 hover:text-amber-700 font-bold">✕</button>
+        </div>
+      )}
+
       <div className="grid grid-cols-7 text-center text-xs font-medium text-stone-400 mb-1">
         {DAYS.map(d => <div key={d} className="py-1">{d}</div>)}
       </div>
@@ -65,17 +113,31 @@ function AdminCalendar({
         {cells.map((day, i) => {
           if (!day) return <div key={`b-${i}`} />;
           const iso = toISO(viewYear, viewMonth, day);
-          const blocked = blockedDates.includes(iso);
+          const isBlocked = blockedDates.includes(iso);
+          const isStart = iso === rangeStart;
+          const inPreview = previewDates?.has(iso) ?? false;
+
+          let cls = 'w-full aspect-square rounded-lg text-sm font-medium transition-all ';
+          if (isStart) {
+            cls += 'bg-amber-500 text-white ring-2 ring-amber-300';
+          } else if (inPreview && isBlocked) {
+            cls += 'bg-red-200 text-red-800';
+          } else if (inPreview) {
+            cls += 'bg-amber-200 text-amber-900';
+          } else if (isBlocked) {
+            cls += 'bg-red-400 text-white hover:bg-red-500';
+          } else {
+            cls += 'hover:bg-stone-100 text-stone-700';
+          }
+
           return (
             <button
               key={iso}
-              onClick={() => onToggle(iso)}
-              title={blocked ? 'Click to unblock' : 'Click to block'}
-              className={`w-full aspect-square rounded-lg text-sm font-medium transition-all ${
-                blocked
-                  ? 'bg-red-400 text-white hover:bg-red-500'
-                  : 'hover:bg-stone-100 text-stone-700'
-              }`}
+              onClick={() => handleClick(iso)}
+              onMouseEnter={() => rangeStart && setHoverDate(iso)}
+              onMouseLeave={() => setHoverDate(null)}
+              title={isStart ? 'Start selected — click end date' : isBlocked ? 'Blocked — click to include in range' : 'Click to set as start or end'}
+              className={cls}
             >
               {day}
             </button>
@@ -84,7 +146,9 @@ function AdminCalendar({
       </div>
 
       <p className="text-xs text-stone-400 mt-3">
-        Red = blocked (unavailable for guests). Click any date to toggle.
+        {rangeStart
+          ? 'Click any date to block/unblock the whole range.'
+          : 'Click a date to start a range. Single click toggles one date.'}
       </p>
     </div>
   );
@@ -331,14 +395,31 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
     });
   };
 
-  // ── Calendar toggle ──
+  // ── Calendar toggle / range ──
   const toggleDate = async (date: string) => {
-    const current = blocked[calUnit];
-    const action = current.includes(date) ? 'remove' : 'add';
+    const action = blocked[calUnit].includes(date) ? 'remove' : 'add';
     await fetch('/api/admin/blocked-dates', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ unit: calUnit, date, action }),
+    });
+    fetchBlocked();
+  };
+
+  const blockRange = async (dates: string[]) => {
+    await fetch('/api/admin/blocked-dates', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ unit: calUnit, dates, action: 'add' }),
+    });
+    fetchBlocked();
+  };
+
+  const unblockRange = async (dates: string[]) => {
+    await fetch('/api/admin/blocked-dates', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ unit: calUnit, dates, action: 'remove' }),
     });
     fetchBlocked();
   };
@@ -482,6 +563,8 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
               <AdminCalendar
                 blockedDates={blocked[calUnit]}
                 onToggle={toggleDate}
+                onBlockRange={blockRange}
+                onUnblockRange={unblockRange}
               />
             </div>
 

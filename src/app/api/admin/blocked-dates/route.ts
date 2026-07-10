@@ -6,21 +6,23 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const { unit, date, action } = await req.json();
+  const body = await req.json();
+  const { unit, action } = body;
+  // Accept either a single `date` or a `dates` array for range operations
+  const dates: string[] = body.dates ?? (body.date ? [body.date] : []);
 
   if (!['upper', 'lower'].includes(unit as string)) {
     return NextResponse.json({ error: 'Invalid unit' }, { status: 400 });
   }
 
   const data = await getBlockedDates();
-  const list: string[] = data[unit as 'upper' | 'lower'] ?? [];
+  let list: string[] = data[unit as 'upper' | 'lower'] ?? [];
 
-  if (action === 'add' && !list.includes(date)) {
-    list.push(date);
+  if (action === 'add') {
+    const toAdd = dates.filter(d => !list.includes(d));
+    list = [...list, ...toAdd];
   } else if (action === 'remove') {
-    data[unit as 'upper' | 'lower'] = list.filter((d: string) => d !== date);
-    await saveBlockedDates(data);
-    return NextResponse.json({ ok: true });
+    list = list.filter(d => !dates.includes(d));
   }
 
   data[unit as 'upper' | 'lower'] = list;
