@@ -203,7 +203,13 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
     form.append('unit', photoUnit);
     Array.from(files).forEach(f => form.append('files', f));
     const r = await fetch('/api/admin/photos', { method: 'POST', body: form });
-    if (r.ok) { showToast('Photos uploaded!'); fetchPhotos(photoUnit); }
+    if (r.ok) {
+      showToast('Photos uploaded!');
+      fetchPhotos(photoUnit);
+    } else {
+      const body = await r.json().catch(() => ({}));
+      showToast(`Upload failed: ${body.error ?? r.status}`);
+    }
     if (photoInputRef.current) photoInputRef.current.value = '';
   };
 

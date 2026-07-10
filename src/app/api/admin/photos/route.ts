@@ -10,8 +10,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid unit' }, { status: 400 });
   }
 
-  for (const file of files) {
-    await uploadPhoto(unit, file);
+  try {
+    for (const file of files) {
+      await uploadPhoto(unit, file);
+    }
+  } catch (err) {
+    console.error('Cloudinary upload error:', err);
+    return NextResponse.json({ error: String(err) }, { status: 500 });
   }
 
   return NextResponse.json({ ok: true });
