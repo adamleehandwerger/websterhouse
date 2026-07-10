@@ -14,6 +14,21 @@ function toISO(y: number, m: number, d: number) {
   return `${y}-${String(m + 1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
 }
 
+function addDays(iso: string, n: number): string {
+  const d = new Date(iso);
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().split('T')[0];
+}
+
+function getContiguousSegment(iso: string, blockedSet: Set<string>): string[] {
+  const seg = [iso];
+  let prev = iso;
+  while (blockedSet.has(addDays(prev, -1))) { prev = addDays(prev, -1); seg.unshift(prev); }
+  let next = iso;
+  while (blockedSet.has(addDays(next, 1)))  { next = addDays(next, 1);  seg.push(next); }
+  return seg;
+}
+
 function datesInRange(a: string, b: string): string[] {
   const start = new Date(a < b ? a : b);
   const end   = new Date(a < b ? b : a);
@@ -28,12 +43,10 @@ function datesInRange(a: string, b: string): string[] {
 
 function AdminCalendar({
   blockedDates,
-  onToggle,
   onBlockRange,
   onUnblockRange,
 }: {
   blockedDates: string[];
-  onToggle: (date: string) => void;
   onBlockRange: (dates: string[]) => void;
   onUnblockRange: (dates: string[]) => void;
 }) {
@@ -52,25 +65,28 @@ function AdminCalendar({
     else setViewMonth(m => m + 1);
   };
 
+  const blockedSet = new Set(blockedDates);
   const previewDates = rangeStart && hoverDate ? new Set(datesInRange(rangeStart, hoverDate)) : null;
 
   const handleClick = (iso: string) => {
+    // Clicking a blocked date with no range in progress → unblock its whole contiguous segment
+    if (!rangeStart && blockedSet.has(iso)) {
+      onUnblockRange(getContiguousSegment(iso, blockedSet));
+      return;
+    }
+    // Start a new range on an open date
     if (!rangeStart) {
       setRangeStart(iso);
       return;
     }
+    // Cancel if same date clicked again
     if (rangeStart === iso) {
       setRangeStart(null);
+      setHoverDate(null);
       return;
     }
-    const range = datesInRange(rangeStart, iso);
-    // If majority of range is already blocked, unblock it; otherwise block it
-    const blockedCount = range.filter(d => blockedDates.includes(d)).length;
-    if (blockedCount > range.length / 2) {
-      onUnblockRange(range);
-    } else {
-      onBlockRange(range);
-    }
+    // Complete the range → block it
+    onBlockRange(datesInRange(rangeStart, iso));
     setRangeStart(null);
     setHoverDate(null);
   };
@@ -562,7 +578,6 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
             <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-5 w-full max-w-xs">
               <AdminCalendar
                 blockedDates={blocked[calUnit]}
-                onToggle={toggleDate}
                 onBlockRange={blockRange}
                 onUnblockRange={unblockRange}
               />
