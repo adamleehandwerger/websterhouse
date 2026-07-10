@@ -151,10 +151,11 @@ function LoginForm({ onSuccess }: { onSuccess: () => void }) {
 type Tab = 'photos' | 'calendar' | 'reviews';
 
 function AdminPanel({ onLogout }: { onLogout: () => void }) {
+  type Photo = { url: string; publicId: string };
   const [tab, setTab] = useState<Tab>('photos');
-  const [upperPhotos, setUpperPhotos] = useState<string[]>([]);
-  const [lowerPhotos, setLowerPhotos] = useState<string[]>([]);
-  const [reviews, setReviews] = useState<string[]>([]);
+  const [upperPhotos, setUpperPhotos] = useState<Photo[]>([]);
+  const [lowerPhotos, setLowerPhotos] = useState<Photo[]>([]);
+  const [reviews, setReviews] = useState<Photo[]>([]);
   const [blocked, setBlocked] = useState<{ upper: string[]; lower: string[] }>({ upper: [], lower: [] });
   const [photoUnit, setPhotoUnit] = useState<'upper' | 'lower'>('upper');
   const [calUnit, setCalUnit] = useState<'upper' | 'lower'>('upper');
@@ -206,11 +207,11 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
     if (photoInputRef.current) photoInputRef.current.value = '';
   };
 
-  const deletePhoto = async (url: string, unit: 'upper' | 'lower') => {
+  const deletePhoto = async (publicId: string, unit: 'upper' | 'lower') => {
     const r = await fetch('/api/admin/photos', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url }),
+      body: JSON.stringify({ publicId }),
     });
     if (r.ok) { showToast('Photo deleted.'); fetchPhotos(unit); }
   };
@@ -226,11 +227,11 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
     if (reviewInputRef.current) reviewInputRef.current.value = '';
   };
 
-  const deleteReview = async (url: string) => {
+  const deleteReview = async (publicId: string) => {
     const r = await fetch('/api/admin/reviews', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url }),
+      body: JSON.stringify({ publicId }),
     });
     if (r.ok) { showToast('Review deleted.'); fetchReviews(); }
   };
@@ -332,11 +333,11 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
             </p>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {activePhotos.map(url => (
-                <div key={url} className="relative group aspect-video rounded-xl overflow-hidden border border-stone-200">
-                  <img src={url} alt="" className="w-full h-full object-cover" />
+              {activePhotos.map(photo => (
+                <div key={photo.publicId} className="relative group aspect-video rounded-xl overflow-hidden border border-stone-200">
+                  <img src={photo.url} alt="" className="w-full h-full object-cover" />
                   <button
-                    onClick={() => deletePhoto(url, photoUnit)}
+                    onClick={() => deletePhoto(photo.publicId, photoUnit)}
                     className="absolute top-1.5 right-1.5 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow"
                     title="Delete photo"
                   >
@@ -426,11 +427,11 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
             </p>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {reviews.map(url => (
-                <div key={url} className="relative group bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-sm">
-                  <img src={url} alt="Review" className="w-full object-contain" />
+              {reviews.map(review => (
+                <div key={review.publicId} className="relative group bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-sm">
+                  <img src={review.url} alt="Review" className="w-full object-contain" />
                   <button
-                    onClick={() => deleteReview(url)}
+                    onClick={() => deleteReview(review.publicId)}
                     className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-7 h-7 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow"
                     title="Delete review"
                   >

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { put, del } from '@vercel/blob';
+import { uploadReview, deleteAsset } from '@/lib/storage';
 
 export async function POST(req: NextRequest) {
   const form = await req.formData();
@@ -7,16 +7,14 @@ export async function POST(req: NextRequest) {
 
   for (const file of files) {
     if (!file.name.toLowerCase().endsWith('.png')) continue;
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-    const filename = `${Date.now()}-${safeName}`;
-    await put(`uploads/reviews/${filename}`, file, { access: 'public' });
+    await uploadReview(file);
   }
 
   return NextResponse.json({ ok: true });
 }
 
 export async function DELETE(req: NextRequest) {
-  const { url } = await req.json();
-  await del(url);
+  const { publicId } = await req.json();
+  await deleteAsset(publicId);
   return NextResponse.json({ ok: true });
 }

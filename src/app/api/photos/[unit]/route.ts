@@ -6,11 +6,8 @@ export async function GET(
   { params }: { params: { unit: string } }
 ) {
   const { unit } = params;
-
   if (!['upper', 'lower'].includes(unit)) {
     return NextResponse.json({ error: 'Invalid unit' }, { status: 400 });
   }
-
-  const photos = await getPhotos(unit);
-  return NextResponse.json({ photos });
+  return NextResponse.json({ photos: await getPhotos(unit) });
 }

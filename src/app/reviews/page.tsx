@@ -15,9 +15,9 @@ export default async function Reviews() {
         </div>
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reviews.map(url => (
-            <div key={url} className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
-              <img src={url} alt="Guest review" className="w-full object-contain" />
+          {reviews.map(review => (
+            <div key={review.publicId} className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+              <img src={review.url} alt="Guest review" className="w-full object-contain" />
             </div>
           ))}
         </div>
