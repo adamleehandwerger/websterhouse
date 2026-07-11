@@ -16,7 +16,7 @@ export default function Nav() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-stone-800 shadow-lg">
       <div className="max-w-5xl mx-auto px-4 flex items-center justify-between h-16">
-        <Link href="/" className="text-xl font-bold tracking-wide text-amber-300 hover:text-amber-200 transition-colors">
+        <Link href="/" className="text-xl font-bold tracking-wide text-white hover:text-amber-200 transition-colors">
           Webster House
         </Link>
 
