@@ -12,7 +12,7 @@ export default function About() {
         <img
           src="/images/Adam&Erin.jpg"
           alt="Adam and Erin"
-          className="w-full object-cover max-h-[480px] object-top"
+          className="w-full h-auto"
         />
       </div>
 
