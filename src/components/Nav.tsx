@@ -28,7 +28,7 @@ export default function Nav() {
               key={href}
               href={href}
               className={`text-sm font-medium transition-colors ${
-                path === href ? 'text-amber-300' : 'text-stone-300 hover:text-amber-300'
+                path === href ? 'text-amber-300' : 'text-white hover:text-amber-300'
               }`}
             >
               {label}
@@ -38,7 +38,7 @@ export default function Nav() {
 
         {/* Mobile toggle */}
         <button
-          className="md:hidden p-2 text-stone-300 hover:text-amber-300 transition-colors"
+          className="md:hidden p-2 text-white hover:text-amber-300 transition-colors"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -60,7 +60,7 @@ export default function Nav() {
               href={href}
               onClick={() => setOpen(false)}
               className={`text-sm font-medium py-1 transition-colors ${
-                path === href ? 'text-amber-300' : 'text-stone-300 hover:text-amber-300'
+                path === href ? 'text-amber-300' : 'text-white hover:text-amber-300'
               }`}
             >
               {label}
