@@ -14,18 +14,18 @@ export default async function Home() {
 
       {/* ── Hero ── */}
       <section className="relative rounded-2xl mb-14 overflow-hidden min-h-[440px] flex items-start">
-        {/* Background photo — zoomed out */}
+        {/* Background photo — anchored to the right */}
         <div
-          className="absolute inset-0 bg-center bg-no-repeat"
+          className="absolute inset-0 bg-right bg-no-repeat"
           style={{ backgroundImage: "url('/images/house.jpg')", backgroundSize: '45%' }}
         />
         <div className="absolute inset-0 bg-black/55" />
 
-        {/* Content — two columns, anchored to top */}
-        <div className="relative z-10 w-full flex flex-col sm:flex-row items-start justify-between gap-8 px-10 pt-10 pb-12">
+        {/* Content — left side only */}
+        <div className="relative z-10 w-full flex flex-col items-start gap-6 px-10 pt-10 pb-12 max-w-md">
 
-          {/* Left: title + description */}
-          <div className="max-w-md">
+          {/* Title + description */}
+          <div>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight drop-shadow-lg">
               Welcome to<br />Webster House
             </h1>
@@ -36,17 +36,17 @@ export default async function Home() {
             </p>
           </div>
 
-          {/* Right: unit buttons */}
-          <div className="flex flex-col gap-4 shrink-0 sm:pt-3">
+          {/* Unit buttons */}
+          <div className="flex flex-col gap-4 w-full">
             <Link
               href="/upper-unit"
-              className="px-8 py-4 bg-amber-500 hover:bg-amber-400 text-white rounded-xl font-semibold transition-colors shadow-lg text-center min-w-[180px]"
+              className="px-8 py-4 bg-amber-500 hover:bg-amber-400 text-white rounded-xl font-semibold transition-colors shadow-lg text-center"
             >
               Upper Unit
             </Link>
             <Link
               href="/lower-unit"
-              className="px-8 py-4 bg-white/20 hover:bg-white/30 text-white border border-white/40 rounded-xl font-semibold transition-colors backdrop-blur-sm text-center min-w-[180px]"
+              className="px-8 py-4 bg-white/20 hover:bg-white/30 text-white border border-white/40 rounded-xl font-semibold transition-colors backdrop-blur-sm text-center"
             >
               Lower Unit
             </Link>
