@@ -8,11 +8,11 @@ export default function About() {
       </p>
 
       {/* Photo */}
-      <div className="rounded-2xl overflow-hidden mb-12 shadow-md">
+      <div className="mb-12 flex justify-center">
         <img
           src="/images/Adam&Erin.jpg"
           alt="Adam and Erin"
-          className="w-full h-auto"
+          className="rounded-2xl shadow-md w-full max-w-md h-auto"
         />
       </div>
 
