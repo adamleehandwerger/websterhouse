@@ -7,15 +7,6 @@ export default function About() {
         We&rsquo;re Adam and Erin, the owners of Webster House.
       </p>
 
-      {/* Photo */}
-      <div className="rounded-2xl overflow-hidden mb-12 shadow-md">
-        <img
-          src="/images/adam-erin.jpg"
-          alt="Adam and Erin"
-          className="w-full object-cover max-h-[480px] object-top"
-        />
-      </div>
-
       {/* Bios */}
       <div className="grid md:grid-cols-2 gap-10">
 
@@ -23,46 +14,26 @@ export default function About() {
         <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-7">
           <h2 className="text-xl font-bold text-stone-800 mb-1">Adam</h2>
           <p className="text-amber-600 text-sm font-medium mb-4">Co-owner &amp; Host</p>
-          <p className="text-stone-600 leading-relaxed mb-4">
+          <p className="text-stone-600 leading-relaxed mb-3">
             Adam has a background in physics and mathematics and is currently looking for
             work at the intersection of physics and machine learning.
           </p>
-          <ul className="space-y-1.5 text-stone-500 text-sm">
-            {[
-              'Physics & mathematics',
-              'Architecture & passive building design',
-              'Military history',
-              'Music',
-              'Hiking',
-            ].map(interest => (
-              <li key={interest} className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
-                {interest}
-              </li>
-            ))}
-          </ul>
+          <p className="text-stone-500 text-sm leading-relaxed">
+            His interests include physics, mathematics, architecture, passive building design,
+            military history, music, and hiking.
+          </p>
         </div>
 
         {/* Erin */}
         <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-7">
           <h2 className="text-xl font-bold text-stone-800 mb-1">Erin</h2>
           <p className="text-amber-600 text-sm font-medium mb-4">Co-owner &amp; Host</p>
-          <p className="text-stone-600 leading-relaxed mb-4">
+          <p className="text-stone-600 leading-relaxed mb-3">
             Erin works in program support for young children at a Montessori school.
           </p>
-          <ul className="space-y-1.5 text-stone-500 text-sm">
-            {[
-              'Art & crafts',
-              'Cooking',
-              'Travel',
-              'Camping',
-            ].map(interest => (
-              <li key={interest} className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0" />
-                {interest}
-              </li>
-            ))}
-          </ul>
+          <p className="text-stone-500 text-sm leading-relaxed">
+            Her interests include art and crafts, cooking, travel, and camping.
+          </p>
         </div>
 
       </div>
