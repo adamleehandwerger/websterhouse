@@ -7,6 +7,15 @@ export default function About() {
         We&rsquo;re Adam and Erin, the owners of Webster House.
       </p>
 
+      {/* Photo */}
+      <div className="rounded-2xl overflow-hidden mb-12 shadow-md">
+        <img
+          src="/images/Adam&Erin.jpg"
+          alt="Adam and Erin"
+          className="w-full object-cover max-h-[480px] object-top"
+        />
+      </div>
+
       {/* Bios */}
       <div className="grid md:grid-cols-2 gap-10">
 
