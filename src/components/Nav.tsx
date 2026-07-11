@@ -7,6 +7,7 @@ const links = [
   { href: '/upper-unit', label: 'Upper Unit' },
   { href: '/lower-unit', label: 'Lower Unit' },
   { href: '/reviews', label: 'Reviews' },
+  { href: '/about', label: 'About Us' },
 ];
 
 export default function Nav() {
