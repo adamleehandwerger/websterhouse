@@ -19,7 +19,11 @@ export default async function Home() {
           className="absolute inset-0 bg-right bg-no-repeat"
           style={{ backgroundImage: "url('/images/house.jpg')", backgroundSize: '45%' }}
         />
-        <div className="absolute inset-0 bg-black/30" />
+        {/* Forest green panel on the left, fades into the photo */}
+        <div
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(to right, #2d5a27 55%, rgba(0,0,0,0.15) 100%)' }}
+        />
 
         {/* Content — left side only */}
         <div className="relative z-10 w-full flex flex-col items-start gap-6 px-10 pt-10 pb-12 max-w-md">
