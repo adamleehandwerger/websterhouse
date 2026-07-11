@@ -14,7 +14,7 @@ export default function Nav() {
   const path = usePathname();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 shadow-sm" style={{ backgroundColor: '#A9CC8B' }}>
+    <nav className="fixed top-0 left-0 right-0 z-50 shadow-sm" style={{ backgroundColor: '#C09189' }}>
       <div className="max-w-5xl mx-auto px-4 flex items-center justify-between h-16">
         <Link href="/" className="text-xl font-bold tracking-wide transition-opacity hover:opacity-80" style={{ color: '#494B39' }}>
           Webster House
@@ -52,7 +52,7 @@ export default function Nav() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t px-4 py-3 flex flex-col gap-3" style={{ backgroundColor: '#A9CC8B', borderColor: '#96b87a' }}>
+        <div className="md:hidden border-t px-4 py-3 flex flex-col gap-3" style={{ backgroundColor: '#C09189', borderColor: '#b08078' }}>
           {links.map(({ href, label }) => (
             <Link
               key={href}
