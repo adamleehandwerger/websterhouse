@@ -14,9 +14,9 @@ export default function Nav() {
   const path = usePathname();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-rose-100 shadow-sm">
+    <nav className="fixed top-0 left-0 right-0 z-50 shadow-sm" style={{ backgroundColor: '#C09189' }}>
       <div className="max-w-5xl mx-auto px-4 flex items-center justify-between h-16">
-        <Link href="/" className="text-xl font-bold tracking-wide text-stone-800 hover:text-emerald-700 transition-colors">
+        <Link href="/" className="text-xl font-bold tracking-wide transition-opacity hover:opacity-80" style={{ color: '#494B39' }}>
           Webster House
         </Link>
 
@@ -26,9 +26,8 @@ export default function Nav() {
             <Link
               key={href}
               href={href}
-              className={`text-sm font-medium transition-colors ${
-                path === href ? 'text-emerald-600' : 'text-stone-600 hover:text-emerald-600'
-              }`}
+              className="text-sm font-medium transition-opacity hover:opacity-70"
+              style={{ color: '#494B39', opacity: path === href ? 1 : 0.75 }}
             >
               {label}
             </Link>
@@ -37,7 +36,8 @@ export default function Nav() {
 
         {/* Mobile toggle */}
         <button
-          className="md:hidden p-2 text-stone-600 hover:text-emerald-600 transition-colors"
+          className="md:hidden p-2 transition-opacity hover:opacity-70"
+          style={{ color: '#494B39' }}
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -52,15 +52,14 @@ export default function Nav() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden bg-rose-50 border-t border-rose-200 px-4 py-3 flex flex-col gap-3">
+        <div className="md:hidden border-t px-4 py-3 flex flex-col gap-3" style={{ backgroundColor: '#C09189', borderColor: '#b08078' }}>
           {links.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
               onClick={() => setOpen(false)}
-              className={`text-sm font-medium py-1 transition-colors ${
-                path === href ? 'text-emerald-600' : 'text-stone-600 hover:text-emerald-600'
-              }`}
+              className="text-sm font-medium py-1 transition-opacity hover:opacity-70"
+              style={{ color: '#494B39', opacity: path === href ? 1 : 0.75 }}
             >
               {label}
             </Link>
