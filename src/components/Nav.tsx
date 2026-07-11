@@ -14,9 +14,9 @@ export default function Nav() {
   const path = usePathname();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-stone-800 shadow-lg">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-rose-100 shadow-sm">
       <div className="max-w-5xl mx-auto px-4 flex items-center justify-between h-16">
-        <Link href="/" className="text-xl font-bold tracking-wide text-amber-300 hover:text-amber-200 transition-colors">
+        <Link href="/" className="text-xl font-bold tracking-wide text-stone-800 hover:text-emerald-700 transition-colors">
           Webster House
         </Link>
 
@@ -27,7 +27,7 @@ export default function Nav() {
               key={href}
               href={href}
               className={`text-sm font-medium transition-colors ${
-                path === href ? 'text-amber-300' : 'text-stone-300 hover:text-amber-300'
+                path === href ? 'text-emerald-600' : 'text-stone-600 hover:text-emerald-600'
               }`}
             >
               {label}
@@ -37,7 +37,7 @@ export default function Nav() {
 
         {/* Mobile toggle */}
         <button
-          className="md:hidden p-2 text-stone-300 hover:text-amber-300 transition-colors"
+          className="md:hidden p-2 text-stone-600 hover:text-emerald-600 transition-colors"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
         >
@@ -52,14 +52,14 @@ export default function Nav() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden bg-stone-700 border-t border-stone-600 px-4 py-3 flex flex-col gap-3">
+        <div className="md:hidden bg-rose-50 border-t border-rose-200 px-4 py-3 flex flex-col gap-3">
           {links.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
               onClick={() => setOpen(false)}
               className={`text-sm font-medium py-1 transition-colors ${
-                path === href ? 'text-amber-300' : 'text-stone-300 hover:text-amber-300'
+                path === href ? 'text-emerald-600' : 'text-stone-600 hover:text-emerald-600'
               }`}
             >
               {label}

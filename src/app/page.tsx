@@ -19,7 +19,7 @@ export default async function Home() {
           className="absolute inset-0 bg-right bg-no-repeat"
           style={{ backgroundImage: "url('/images/house.jpg')", backgroundSize: '45%' }}
         />
-        <div className="absolute inset-0 bg-black/55" />
+        <div className="absolute inset-0 bg-black/30" />
 
         {/* Content — left side only */}
         <div className="relative z-10 w-full flex flex-col items-start gap-6 px-10 pt-10 pb-12 max-w-md">
