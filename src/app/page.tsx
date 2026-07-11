@@ -68,7 +68,11 @@ export default async function Home() {
           <ul className="space-y-2 text-stone-600 text-sm">
             <li className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
-              Central air conditioning &amp; heat
+              Upper unit: mini-split heating &amp; cooling
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
+              Lower unit: central heating &amp; AC
             </li>
             <li className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
@@ -80,7 +84,7 @@ export default async function Home() {
             </li>
             <li className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
-              Front porch &amp; backyard
+              Front porch &amp; backyard (lower unit)
             </li>
             <li className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />

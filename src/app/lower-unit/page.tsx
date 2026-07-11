@@ -12,7 +12,7 @@ export default async function LowerUnit() {
     <UnitPage
       unit="lower"
       title="Lower Unit"
-      description="A cozy, private retreat with its own entrance. Ideal for families or groups looking for a quiet and comfortable stay. 1.5 baths. Sleeps up to 4 guests."
+      description="A cozy, private retreat with its own entrance. Ideal for families or groups looking for a quiet and comfortable stay. Central heating and AC. 1.5 baths. Sleeps up to 4 guests."
       basePrice={2650}
       extraPerPerson={150}
       maxGuests={4}

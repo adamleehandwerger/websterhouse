@@ -12,7 +12,7 @@ export default async function UpperUnit() {
     <UnitPage
       unit="upper"
       title="Upper Unit"
-      description="Bright and spacious with an open floor plan, fully equipped kitchen, and comfortable furnishings throughout. 1 bath. Sleeps up to 3 guests."
+      description="Bright and spacious with an open floor plan, fully equipped kitchen, and comfortable furnishings throughout. Mini-split heating and cooling. 1 bath. Sleeps up to 3 guests."
       basePrice={2600}
       extraPerPerson={100}
       maxGuests={3}
