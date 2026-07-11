@@ -84,7 +84,11 @@ export default async function Home() {
             </li>
             <li className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
-              Front porch &amp; backyard (lower unit)
+              Front porch with bicycle storage
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
+              Fenced backyard with lower unit
             </li>
             <li className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-amber-400 shrink-0" />
