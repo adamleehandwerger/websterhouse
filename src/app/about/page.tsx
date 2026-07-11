@@ -4,8 +4,7 @@ export default function About() {
 
       <h1 className="text-3xl font-bold text-stone-800 mb-2">About Us</h1>
       <p className="text-stone-500 mb-10">
-        We&rsquo;re the owners of Webster House &mdash; a 1909 Portland duplex we&rsquo;ve lovingly
-        maintained and made available for mid-term stays.
+        We&rsquo;re Adam and Erin, the owners of Webster House.
       </p>
 
       {/* Photo */}
@@ -25,10 +24,8 @@ export default function About() {
           <h2 className="text-xl font-bold text-stone-800 mb-1">Adam</h2>
           <p className="text-amber-600 text-sm font-medium mb-4">Co-owner &amp; Host</p>
           <p className="text-stone-600 leading-relaxed mb-4">
-            Adam has a background in physics and mathematics and is currently exploring the
-            intersection of physics and machine learning. He brings a detail-oriented,
-            analytical eye to everything he touches &mdash; including keeping Webster House
-            in great shape.
+            Adam has a background in physics and mathematics and is currently looking for
+            work at the intersection of physics and machine learning.
           </p>
           <ul className="space-y-1.5 text-stone-500 text-sm">
             {[
@@ -51,9 +48,7 @@ export default function About() {
           <h2 className="text-xl font-bold text-stone-800 mb-1">Erin</h2>
           <p className="text-amber-600 text-sm font-medium mb-4">Co-owner &amp; Host</p>
           <p className="text-stone-600 leading-relaxed mb-4">
-            Erin works as a program support specialist for young children at a Montessori
-            school, where her patience and creativity shine every day. She brings that same
-            warmth to making guests feel right at home at Webster House.
+            Erin works in program support for young children at a Montessori school.
           </p>
           <ul className="space-y-1.5 text-stone-500 text-sm">
             {[
